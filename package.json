@@ -1,41 +1,42 @@
 {
-	"name": "@alphabatem/vue2-wallet-adapter",
-	"version": "0.1.1",
-	"description": "Solana wallet integration for Vue 2",
-	"author": "AlphaBatem",
-	"license": "MIT",
-	"files": [
-		"dist",
-		"src",
-		"styles.css",
-		"postcss.config.js"
-	],
-	"main": "./dist/index.js",
-	"exports": {
-		".": {
-			"import": "./dist/index.js"
-		},
-		"./styles.css": "./styles.css",
-		"./postcss.config.js": "./postcss.config.js"
+  "name": "@alphabatem/vue2-wallet-adapter",
+  "version": "0.1.1",
+  "description": "Solana wallet integration for Vue 2",
+  "author": "AlphaBatem",
+  "license": "MIT",
+  "files": [
+	"dist",
+	"src",
+	"styles.css",
+	"postcss.config.js"
+  ],
+  "main": "./dist/index.js",
+  "exports": {
+	".": {
+	  "import": "./dist/index.js",
+	  "typings": "./dist/index.d.ts"
 	},
-	"scripts": {
-		"dev": "yarn",
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"dependencies": {
-		"@solana/wallet-adapter-base": "^0.9.5",
-		"portal-vue": "^2.1.7"
-	},
-	"devDependencies": {
-		"@project-serum/anchor": "^0.20.1",
-		"@solana/wallet-adapter-wallets": "^0.17.0",
-		"@solana/web3.js": "^1.44.1",
-		"@types/node-fetch": "^2.6.2",
-		"typescript": "^4.5.4",
-		"vue": "^2.6.11"
-	},
-	"peerDependencies": {
-		"@solana/wallet-adapter-wallets": "^0.17.0",
-		"vue": "^2.6.11"
-	}
+	"./styles.css": "./styles.css",
+	"./postcss.config.js": "./postcss.config.js"
+  },
+  "scripts": {
+	"dev": "yarn",
+	"test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+	"@solana/wallet-adapter-base": "^0.9.5",
+	"portal-vue": "^2.1.7"
+  },
+  "devDependencies": {
+	"@project-serum/anchor": "^0.20.1",
+	"@solana/wallet-adapter-wallets": "^0.17.0",
+	"@solana/web3.js": "^1.44.1",
+	"@types/node-fetch": "^2.6.2",
+	"typescript": "^4.5.4",
+	"vue": "^2.6.11"
+  },
+  "peerDependencies": {
+	"@solana/wallet-adapter-wallets": "^0.17.0",
+	"vue": "^2.6.11"
+  }
 }

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import {useWallet} from "./useWallet";
+import {useWallet} from "@/useWallet";
 import WalletIcon from "./WalletIcon.vue";
 
 export default {
