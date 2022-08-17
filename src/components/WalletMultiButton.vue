@@ -100,9 +100,15 @@ export default {
 	methods: {
 		copyAddress: () => {
 		},
+		/**
+		 * @type function
+		 */
 		openDropdown: function(e) {
 			this.dropdownOpened = true
 		},
+		/**
+		 * @type function
+		 */
 		closeDropdown: function(e) {
 			this.dropdownOpened = false
 		},

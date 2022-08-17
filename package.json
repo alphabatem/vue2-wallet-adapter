@@ -1,6 +1,6 @@
 {
   "name": "@alphabatem/vue2-wallet-adapter",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Solana wallet integration for Vue 2",
   "author": "AlphaBatem",
   "license": "MIT",
@@ -10,21 +10,25 @@
 	"styles.css",
 	"postcss.config.js"
   ],
-  "main": "./dist/index.js",
+  "main": "./dist/vue2-wallet-adapter.umd.js",
+  "module": "./dist/vue2-wallet-adapter.es.js",
+  "typings": "./dist/index.d.ts",
   "exports": {
 	".": {
-	  "import": "./dist/index.js",
-	  "typings": "./dist/index.d.ts"
+	  "import": "./dist/vue2-wallet-adapter.es.js",
+	  "require": "./dist/vue2-wallet-adapter.umd.js"
 	},
 	"./styles.css": "./styles.css",
 	"./postcss.config.js": "./postcss.config.js"
   },
   "scripts": {
 	"dev": "yarn",
+	"build": "vite build && vue-tsc --emitDeclarationOnly",
 	"test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
 	"@solana/wallet-adapter-base": "^0.9.5",
+	"@vitejs/plugin-vue": "^3.0.3",
 	"portal-vue": "^2.1.7"
   },
   "devDependencies": {
@@ -33,7 +37,9 @@
 	"@solana/web3.js": "^1.44.1",
 	"@types/node-fetch": "^2.6.2",
 	"typescript": "^4.5.4",
-	"vue": "^2.6.11"
+	"vite": "^2.7.2",
+	"vue": "^2.6.11",
+	"vue-tsc": "^0.40.1"
   },
   "peerDependencies": {
 	"@solana/wallet-adapter-wallets": "^0.17.0",
