@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import WalletMultiButton from "../src/WalletMultiButton";
+import WalletMultiButton from "../src/components/WalletMultiButton";
 import {PhantomWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets";
 
 export default {

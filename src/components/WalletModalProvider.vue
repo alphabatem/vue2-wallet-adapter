@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import {useWallet} from "./useWallet.ts";
+import {useWallet} from "../useWallet.ts";
 import WalletIcon from './WalletIcon.vue';
 
 

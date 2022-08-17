@@ -56,7 +56,7 @@
 
 
 <script>
-import {initWallet, useWallet} from "./useWallet.ts";
+import {initWallet, useWallet} from "../useWallet.ts";
 import WalletConnectButton from "./WalletConnectButton.vue";
 import WalletIcon from "./WalletIcon.vue";
 import WalletModalProvider from "./WalletModalProvider.vue";
