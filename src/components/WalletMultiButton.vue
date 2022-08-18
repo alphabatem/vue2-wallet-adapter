@@ -115,12 +115,12 @@ export default {
 	},
 	mounted() {
 		const {publicKey, wallet, disconnect, connect} = useWallet();
-		console.log("Using wallets", publicKey, wallet)
 		this.publicKey = publicKey
 		this.wallet = wallet
 		this.disconnect = disconnect
 		connect().then(r => {
 			console.log("Wallet connected")
+			this.emit("connected")
 		})
 	},
 	beforeMount() {
