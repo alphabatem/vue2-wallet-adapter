@@ -73,6 +73,7 @@ export default {
 		container: {type: String, default: 'body'},
 		logo: {type: String},
 		dark: {type: Boolean},
+		autoConnect: {type: Boolean, default: false},
 		wallets: {type: Array, required: true}
 	},
 	data() {
@@ -126,7 +127,7 @@ export default {
 	beforeMount() {
 		initWallet({
 			wallets: this.wallets,
-			autoConnect: true
+			autoConnect: this.autoConnect
 		})
 	}
 }
