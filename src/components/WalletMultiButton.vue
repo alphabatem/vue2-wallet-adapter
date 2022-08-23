@@ -74,6 +74,7 @@ export default {
 		logo: {type: String},
 		dark: {type: Boolean},
 		autoConnect: {type: Boolean, default: false},
+		openOnboardingUrls: {type: Boolean, default: false},
 		wallets: {type: Array, required: true}
 	},
 	data() {
@@ -127,7 +128,8 @@ export default {
 	beforeMount() {
 		initWallet({
 			wallets: this.wallets,
-			autoConnect: this.autoConnect
+			autoConnect: this.autoConnect,
+			openOnboardingUrls: this.openOnboardingUrls
 		})
 	}
 }
