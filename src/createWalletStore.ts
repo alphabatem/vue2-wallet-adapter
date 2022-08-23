@@ -19,6 +19,7 @@ export interface WalletStore {
 	// Props.
 	wallets: Ref<Wallet[]>;
 	autoConnect: Ref<boolean>;
+	openOnboardingUrls: Ref<boolean>;
 
 	// Data.
 	wallet: Ref<Wallet | null>;
@@ -51,6 +52,7 @@ export interface WalletStore {
 export interface WalletStoreProps {
 	wallets?: Wallet[] | Ref<Wallet[]>;
 	autoConnect?: boolean | Ref<boolean>;
+	openOnboardingUrls?: boolean | Ref<boolean>;
 	onError?: (error: WalletError) => void;
 	localStorageKey?: string;
 }
@@ -58,12 +60,14 @@ export interface WalletStoreProps {
 export const createWalletStore = ({
 									  wallets: initialWallets = [],
 									  autoConnect: initialAutoConnect = false,
+									  openOnboardingUrls: initialOpenOnboardingUrls = false,
 									  onError = (error: WalletError) => console.error(error),
 									  localStorageKey = "walletName",
 								  }: WalletStoreProps): WalletStore => {
 	// Mutable values.
 	const wallets: Ref<Wallet[]> = shallowRef(initialWallets);
 	const autoConnect = ref(initialAutoConnect);
+	const openOnboardingUrls = ref(initialOpenOnboardingUrls);
 
 	const k = localStorage.getItem(localStorageKey)
 	const name: Ref<WalletName | null> = ref<WalletName | null>(k as WalletName);
@@ -158,7 +162,7 @@ export const createWalletStore = ({
 		if (!ready.value) {
 			name.value = null;
 
-			if (typeof window !== "undefined") {
+			if (typeof window !== "undefined" && openOnboardingUrls) {
 				window.open(wallet.value.url, "_blank");
 			}
 
@@ -261,6 +265,7 @@ export const createWalletStore = ({
 		// Props.
 		wallets,
 		autoConnect,
+		openOnboardingUrls,
 
 		// Data.
 		wallet,
