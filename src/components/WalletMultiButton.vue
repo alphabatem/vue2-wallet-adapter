@@ -122,7 +122,7 @@ export default {
 		this.disconnect = disconnect
 		connect().then(r => {
 			console.log("Wallet connected")
-			this.emit("connected")
+			this.$emit("connected")
 		})
 	},
 	beforeMount() {

@@ -3,7 +3,7 @@
 		<button
 				class="swv-button swv-button-trigger"
 				:disabled="disabled || disconnecting || !wallet"
-				@click="handleClick"
+				@click="(e) => handleClick(e)"
 		>
 			<wallet-icon v-if="wallet" :wallet="wallet"></wallet-icon>
 			<p v-text="content"></p>
@@ -38,7 +38,7 @@ export default {
 	},
 	methods: {
 		handleClick: (event) => {
-			this.emit("click", event);
+			this.$emit("click", event);
 			if (event.defaultPrevented) return;
 			this.disconnect().catch(() => {
 			});
