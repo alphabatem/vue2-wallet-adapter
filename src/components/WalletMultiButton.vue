@@ -5,7 +5,10 @@
 				<button v-if="!wallet" class="swv-button swv-button-trigger btn btn-primary text-white" @click="(e) => openDropdown(e)">
 					Select Wallet
 				</button>
-				<wallet-connect-button v-else-if="!publicKeyBase58"></wallet-connect-button>
+				<div v-else-if="!publicKeyBase58">
+					<wallet-connect-button :wallet="wallet" @connect="doConnect"></wallet-connect-button>
+					<span class="swv-change-wallet-text" @click="(e) => openDropdown(e)">Change Wallet</span>
+				</div>
 				<div v-else class="swv-dropdown">
 					<slot name="dropdown-button">
 						<button
@@ -84,6 +87,7 @@ export default {
 			publicKey: null,
 			wallet: null,
 			disconnect: null,
+			connect: null,
 			dropdownPanel: null,
 			dropdownOpened: false,
 		}
@@ -100,6 +104,14 @@ export default {
 		}
 	},
 	methods: {
+		doConnect: function(e){
+			if (!this.wallet)
+				return
+
+			console.log("doConnect", this.wallet)
+			this.connect()
+		},
+
 		copyAddress: () => {
 		},
 		/**
@@ -115,22 +127,41 @@ export default {
 			this.dropdownOpened = false
 		},
 	},
-	mounted() {
-		const {publicKey, wallet, disconnect, connect} = useWallet();
-		this.publicKey = publicKey
-		this.wallet = wallet
-		this.disconnect = disconnect
-		connect().then(r => {
-			console.log("Wallet connected")
-			this.$emit("connected")
-		})
-	},
+	// mounted() {
+	//
+	// 	const {publicKey, wallet, disconnect, connect, select} = useWallet();
+	// 	this.publicKey = publicKey
+	// 	this.wallet = wallet
+	// 	this.disconnect = disconnect
+	// 	this.connect = connect
+	//
+	// 	console.log("WalletMultiButton Mounted", this.wallet)
+	// 	// if (this.wallet) {
+	// 	// 	console.log("Selecting wallet", this.wallet.name)
+	// 	// 	select(this.wallet.name)
+	// 	// }
+	// 	// this.connect().then(r => {
+	// 	// 	console.log("Wallet connected")
+	// 	// 	this.$emit("connected")
+	// 	// })
+	// },
 	beforeMount() {
 		initWallet({
 			wallets: this.wallets,
 			autoConnect: this.autoConnect,
 			openOnboardingUrls: this.openOnboardingUrls
 		})
+
+		const {publicKey, wallet, disconnect, connect, setWallet, readyState} = useWallet();
+		this.publicKey = publicKey
+		this.wallet = wallet
+		this.disconnect = disconnect
+		this.connect = connect
+
+		if (this.wallet) {
+			console.debug("selecting wallet:", this.wallet)
+			setWallet(this.wallet)
+		}
 	}
 }
 </script>

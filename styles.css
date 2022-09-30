@@ -310,3 +310,11 @@
 	width: 28px;
 	height: 28px;
 }
+
+.swv-change-wallet-text {
+	cursor: pointer;
+}
+.swv-change-wallet-text:hover, .swv-change-wallet-text:active, .swv-change-wallet-text:focus {
+	transform: scale(1.1);
+	transition: all 0.3ms ease-in-out;
+}

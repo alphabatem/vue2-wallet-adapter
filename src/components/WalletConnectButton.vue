@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import {useWallet} from "@/useWallet";
 import WalletIcon from "./WalletIcon.vue";
 
 export default {
@@ -23,12 +22,12 @@ export default {
 	props: {
 		disabled: {
 			type: Boolean
-		}
+		},
+		wallet: null,
+		connect: null,
 	},
 	data() {
 		return {
-			wallet: null,
-			connect: null,
 			connecting: false,
 			connected: false,
 		}
@@ -42,18 +41,15 @@ export default {
 		}
 	},
 	methods: {
-		onClick: (event) => {
+		onClick: function (event) {
+			this.$emit('connect')
+			return;
+
 			if (event.defaultPrevented || !this.connect) return;
-			this.connect().catch(() => {
+			this.connect().catch((e) => {
+				console.error("Unable to connect", e)
 			});
 		}
 	},
-	mounted() {
-		const {wallet, connect, connecting, connected} = useWallet();
-		this.wallet = wallet
-		this.connect = connect
-		this.connecting = connecting
-		this.connected = connected
-	}
 }
 </script>

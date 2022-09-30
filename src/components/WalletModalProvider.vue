@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import {useWallet} from "@/useWallet";
+import {initWallet, useWallet} from "@/useWallet";
 import WalletIcon from './WalletIcon.vue';
 
 
@@ -117,7 +117,7 @@ export default {
 		},
 
 		onSelect: function(walletName) {
-			console.log("Wallet selected", walletName)
+			console.debug("Wallet selected", walletName)
 			this.selectWallet(walletName)
 			this.closeModal();
 		}

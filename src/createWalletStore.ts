@@ -33,6 +33,8 @@ export interface WalletStore {
 	// Methods.
 	select(walletName: WalletName): void;
 
+	setWallet(newWallet: Wallet | null): void;
+
 	connect(): Promise<void>;
 
 	disconnect(): Promise<void>;
@@ -85,6 +87,7 @@ export const createWalletStore = ({
 
 	// Helper methods to set and reset the main state variables.
 	const setWallet = (newWallet: Wallet | null) => {
+		console.log("setWallet", newWallet)
 		wallet.value = newWallet;
 		readyState.value = newWallet?.readyState ?? WalletReadyState.NotDetected;
 		publicKey.value = newWallet?.publicKey ?? null;
@@ -122,7 +125,8 @@ export const createWalletStore = ({
 
 	// Select a wallet adapter by name.
 	const select = async (walletName: WalletName): Promise<void> => {
-		if (name.value === walletName) return;
+		console.log("Selecting", walletName, name.value)
+		// if (name.value === walletName) return;
 		name.value = walletName;
 	};
 
@@ -281,6 +285,7 @@ export const createWalletStore = ({
 		connect,
 		disconnect,
 		sendTransaction,
+		setWallet,
 		signTransaction,
 		signAllTransactions,
 		signMessage,
