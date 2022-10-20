@@ -23,12 +23,12 @@ export default {
 		disabled: {
 			type: Boolean
 		},
+		connecting: false,
 		wallet: null,
 		connect: null,
 	},
 	data() {
 		return {
-			connecting: false,
 			connected: false,
 		}
 	},

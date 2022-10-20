@@ -6,7 +6,7 @@
 					Select Wallet
 				</button>
 				<div v-else-if="!publicKeyBase58">
-					<wallet-connect-button :wallet="wallet" @connect="doConnect"></wallet-connect-button>
+					<wallet-connect-button :connecting="connecting" :wallet="wallet" @connect="doConnect"></wallet-connect-button>
 					<span class="swv-change-wallet-text" @click="(e) => openDropdown(e)">Change Wallet</span>
 				</div>
 				<div v-else class="swv-dropdown">
@@ -76,6 +76,7 @@ export default {
 		container: {type: String, default: 'body'},
 		logo: {type: String},
 		dark: {type: Boolean},
+		connecting: {type: Boolean},
 		autoConnect: {type: Boolean, default: false},
 		openOnboardingUrls: {type: Boolean, default: false},
 		wallets: {type: Array, required: true}
