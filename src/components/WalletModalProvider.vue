@@ -66,7 +66,6 @@
 				</div>
 			</div>
 		</portal>
-		<portal-target :name="container"></portal-target>
 	</div>
 </template>
 

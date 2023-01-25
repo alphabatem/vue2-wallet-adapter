@@ -63,7 +63,9 @@ export const createWalletStore = ({
 									  wallets: initialWallets = [],
 									  autoConnect: initialAutoConnect = false,
 									  openOnboardingUrls: initialOpenOnboardingUrls = false,
-									  onError = (error: WalletError) => console.error(error),
+									  onError = (error: WalletError) => {
+										  console.error(`WalletError`,error)
+									  },
 									  localStorageKey = "walletName",
 								  }: WalletStoreProps): WalletStore => {
 	// Mutable values.
@@ -87,7 +89,6 @@ export const createWalletStore = ({
 
 	// Helper methods to set and reset the main state variables.
 	const setWallet = (newWallet: Wallet | null) => {
-		console.log("setWallet", newWallet)
 		wallet.value = newWallet;
 		readyState.value = newWallet?.readyState ?? WalletReadyState.NotDetected;
 		publicKey.value = newWallet?.publicKey ?? null;
@@ -134,7 +135,10 @@ export const createWalletStore = ({
 	const onReadyStateChange = () => setWallet(wallet.value);
 	const onConnect = () => setWallet(wallet.value);
 	// @ts-ignore
-	const onDisconnect = () => (name.value = null);
+	const onDisconnect = () => {
+		console.log("Wallet disconnected")
+		name.value = null
+	};
 	const invalidateListeners = watchEffect((onInvalidate) => {
 		const _wallet = wallet.value;
 		if (!_wallet) return;

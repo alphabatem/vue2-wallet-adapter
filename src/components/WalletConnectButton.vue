@@ -1,12 +1,13 @@
 <template>
 	<div>
 		<button
+				title=""
 				class="swv-button swv-button-trigger btn btn-primary text-white"
 				:disabled="disabled || !wallet || connecting || connected"
 				@click="(e) => onClick(e)"
 		>
 			<wallet-icon v-if="wallet" :wallet="wallet"></wallet-icon>
-			<p v-text="content"></p>
+			<span v-text="content"></span>
 		</button>
 	</div>
 </template>
@@ -36,7 +37,7 @@ export default {
 		content: function () {
 			if (this.connecting) return "Connecting ...";
 			if (this.connected) return "Connected";
-			if (this.wallet) return "Connect";
+			if (this.wallet) return "Connect Wallet";
 			return "Connect Wallet";
 		}
 	},
