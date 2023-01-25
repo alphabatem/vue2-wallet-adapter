@@ -128,24 +128,6 @@ export default {
 			this.dropdownOpened = false
 		},
 	},
-	// mounted() {
-	//
-	// 	const {publicKey, wallet, disconnect, connect, select} = useWallet();
-	// 	this.publicKey = publicKey
-	// 	this.wallet = wallet
-	// 	this.disconnect = disconnect
-	// 	this.connect = connect
-	//
-	// 	console.log("WalletMultiButton Mounted", this.wallet)
-	// 	// if (this.wallet) {
-	// 	// 	console.log("Selecting wallet", this.wallet.name)
-	// 	// 	select(this.wallet.name)
-	// 	// }
-	// 	// this.connect().then(r => {
-	// 	// 	console.log("Wallet connected")
-	// 	// 	this.$emit("connected")
-	// 	// })
-	// },
 	beforeMount() {
 		initWallet({
 			wallets: this.wallets,

@@ -167,7 +167,7 @@ export const createWalletStore = ({
 			name.value = null;
 
 			if (typeof window !== "undefined" && openOnboardingUrls.value) {
-				window.open(wallet.value.url, "_blank");
+				// window.open(wallet.value.url, "_blank");
 			}
 
 			throw newError(new WalletNotReadyError());
