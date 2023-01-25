@@ -12,7 +12,7 @@
 				<div v-else class="swv-dropdown">
 					<slot name="dropdown-button">
 						<button
-								@mouseover="openDropdown"
+								@click="openDropdown"
 								class="swv-button swv-button-trigger btn btn-primary text-white"
 								:style="{ pointerEvents: dropdownOpened ? 'none' : 'auto' }"
 								:aria-expanded="dropdownOpened"
@@ -38,7 +38,7 @@
 							<li @click="(e) => {openSelectWallet(e); closeDropdown(e);}" class="swv-dropdown-list-item" role="menuitem">
 								Change wallet
 							</li>
-							<li @click="disconnect" class="swv-dropdown-list-item" role="menuitem">
+							<li @click="(e) => {disconnect(e); closeDropdown(e);}" class="swv-dropdown-list-item" role="menuitem">
 								Disconnect
 							</li>
 						</slot>
@@ -117,8 +117,6 @@ export default {
 		},
 
 		onWalletError: function (e) {
-			console.log("Button: Wallet disconnected", e)
-			this.closeDropdown(e)
 			this.$emit("error", e)
 		},
 
@@ -163,8 +161,7 @@ export default {
 			openOnboardingUrls: this.openOnboardingUrls,
 			onError: this.onWalletError
 		})
-	},
-	mounted() {
+
 		try {
 			const {publicKey, wallet, disconnect, connect, setWallet, readyState} = useWallet();
 			this.wallet = wallet
