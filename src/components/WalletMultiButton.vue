@@ -118,6 +118,7 @@ export default {
 
 		onWalletError: function (e) {
 			console.log("Button: Wallet disconnected", e)
+			this.closeDropdown(e)
 			this.$emit("error", e)
 		},
 
