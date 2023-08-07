@@ -1,6 +1,6 @@
 {
 	"name": "@alphabatem/vue2-wallet-adapter",
-	"version": "0.1.713",
+	"version": "0.1.714",
 	"description": "Solana wallet integration for Vue 2",
 	"author": "AlphaBatem",
 	"license": "MIT",
