@@ -1,11 +1,11 @@
 import type { Adapter, WalletName } from "@solana/wallet-adapter-base";
 import { computed, Ref, shallowRef, watchEffect } from "vue";
 import {
-  isWalletAdapterCompatibleWallet,
   StandardWalletAdapter,
 } from "@solana/wallet-standard-wallet-adapter-base";
-import { DEPRECATED_getWallets } from "@wallet-standard/app";
+import { getWallets } from "@wallet-standard/app";
 import type { Wallet } from "@wallet-standard/base";
+import {isWalletAdapterCompatibleStandardWallet} from "@solana/wallet-adapter-base";
 
 /**
  * Auto-discovers wallet adapters that follows the wallet standard
@@ -15,7 +15,7 @@ export function useStandardWalletAdapters(
   adapters: Ref<Adapter[]>
 ): Ref<Adapter[]> {
   const warnings = new Set<WalletName>();
-  const { get, on } = DEPRECATED_getWallets();
+  const { get, on } = getWallets();
   const swaAdapters = shallowRef<Readonly<StandardWalletAdapter[]>>(
     wrapWalletsInAdapters(get())
   );
@@ -59,6 +59,6 @@ function wrapWalletsInAdapters(
   wallets: ReadonlyArray<Wallet>
 ): ReadonlyArray<StandardWalletAdapter> {
   return wallets
-    .filter(isWalletAdapterCompatibleWallet)
+    .filter(isWalletAdapterCompatibleStandardWallet)
     .map((wallet) => new StandardWalletAdapter({ wallet }));
 }

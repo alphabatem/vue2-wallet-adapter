@@ -1,56 +1,62 @@
-<template>
-	<div>
-		<button
-				title=""
-				class="swv-button swv-button-trigger btn btn-primary text-white"
-				:disabled="disabled || !wallet || connecting || connected"
-				@click="(e) => onClick(e)"
-		>
-			<wallet-icon v-if="wallet" :wallet="wallet"></wallet-icon>
-			<span v-text="content"></span>
-		</button>
-	</div>
-</template>
-
-<script>
+<script lang="ts">
+import {computed, defineComponent, toRefs} from "vue";
+import {useWallet} from "@/useWallet";
 import WalletIcon from "./WalletIcon.vue";
 
-export default {
-	name: "WalletConnectButton",
+export default defineComponent({
 	components: {
 		WalletIcon,
 	},
 	props: {
-		disabled: {
-			type: Boolean
-		},
-		connecting: false,
-		wallet: null,
-		connect: null,
+		disabled: Boolean,
 	},
-	data() {
-		return {
-			connected: false,
-		}
-	},
-	computed: {
-		content: function () {
-			if (this.connecting) return "Connecting ...";
-			if (this.connected) return "Connected";
-			if (this.wallet) return "Connect Wallet";
-			return "Connect Wallet";
-		}
-	},
-	methods: {
-		onClick: function (event) {
-			this.$emit('connect')
-			return;
+	setup(props, {emit}) {
+		const {disabled} = toRefs(props);
+		const {wallet, connect, connecting, connected} = useWallet();
+		console.log("WalletConnectButton:Setup", {
+			wallet, connecting, connected
+		})
 
-			if (event.defaultPrevented || !this.connect) return;
-			this.connect().catch((e) => {
-				console.error("Unable to connect", e)
+		const content = computed(() => {
+			if (connecting.value) return "Connecting ...";
+			if (connected.value) return "Connected";
+			if (wallet.value) return "Connect";
+			return "Connect Wallet";
+		});
+
+		const onClick = (event: MouseEvent) => {
+			emit("click", event);
+			if (event.defaultPrevented) return;
+			connect().catch(() => {
 			});
-		}
+		};
+
+		const scope = {
+			wallet,
+			disabled,
+			connecting,
+			connected,
+			content,
+			onClick,
+		};
+
+		return {
+			scope,
+			...scope,
+		};
 	},
-}
+});
 </script>
+
+<template>
+	<slot v-bind="scope">
+		<button
+				class="swv-button swv-button-trigger btn btn-primary text-white"
+				:disabled="disabled || !wallet || connecting || connected"
+				@click="onClick"
+		>
+			<wallet-icon v-if="wallet" :wallet="wallet"></wallet-icon>
+			<p v-text="content"></p>
+		</button>
+	</slot>
+</template>

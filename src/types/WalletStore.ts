@@ -26,7 +26,17 @@ export type WalletStore = {
 
   // Methods.
   select(walletName: WalletName): void;
+
+  setSolflare(solFlare: any): void;
+
+  /**
+   * @type function
+   */
   connect(): Promise<void>;
+
+  /**
+   * @type function
+   */
   disconnect(): Promise<void>;
   sendTransaction: WalletAdapterProps["sendTransaction"];
 

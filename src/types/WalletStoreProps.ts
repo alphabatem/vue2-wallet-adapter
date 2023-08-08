@@ -8,4 +8,5 @@ export type WalletStoreProps = {
   cluster?: Cluster | Ref<Cluster>;
   onError?: (error: WalletError, adapter?: Adapter) => void;
   localStorageKey?: string;
+  openOnboardingUrls?: boolean;
 };

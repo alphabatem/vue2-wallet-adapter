@@ -36,11 +36,11 @@
 							<ul class="swv-modal-list">
 								<li
 										v-for="wallet in walletsToDisplay"
-										:key="wallet.name"
-										@click="() => onSelect(wallet.name)"
+										:key="wallet.name || wallet.adapter.name"
+										@click="() => onSelect(wallet.name || wallet.adapter.name)"
 								>
 									<button class="swv-button">
-										<p v-text="wallet.name"></p>
+										<p v-text="wallet.name || wallet.adapter.name"></p>
 										<wallet-icon :wallet="wallet"></wallet-icon>
 									</button>
 								</li>
@@ -70,7 +70,6 @@
 </template>
 
 <script>
-import {initWallet, useWallet} from "@/useWallet";
 import WalletIcon from './WalletIcon.vue';
 
 
@@ -85,10 +84,10 @@ export default {
 		container: {type: String, default: 'body'},
 		logo: {type: String},
 		dark: {type: Boolean},
+		wallets: {type: Array},
 	},
 	data() {
 		return {
-			wallets: [],
 			modalPanel: null,
 			expandedWallets: false,
 			selectWallet: null,
@@ -115,16 +114,12 @@ export default {
 			this.$emit("close")
 		},
 
-		onSelect: function(walletName) {
+		onSelect: function (walletName) {
 			console.debug("Wallet selected", walletName)
-			this.selectWallet(walletName)
+
+			this.$emit("select", walletName)
 			this.closeModal();
 		}
-	},
-	mounted() {
-		const {wallets, select} = useWallet();
-		this.wallets = wallets
-		this.selectWallet = select
 	}
 }
 </script>

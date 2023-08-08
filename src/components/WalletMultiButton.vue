@@ -1,13 +1,13 @@
 <template>
-	<wallet-modal-provider @close="selectWalletOpened = !selectWalletOpened" :featured="featured" :container="container" :logo="logo" :dark="dark" :open="selectWalletOpened">
+	<wallet-modal-provider @close="selectWalletOpened = !selectWalletOpened" :featured="featured" :container="container" :logo="logo" :dark="dark" :open="selectWalletOpened"
+			:wallets="adapter.wallets" @select="onSelect">
 		<template>
 			<slot>
-				<button v-if="!wallet" class="swv-button swv-button-trigger btn btn-primary text-white" @click="(e) => openSelectWallet(e)">
+				<button v-if="!adapter.wallet" class="swv-button swv-button-trigger btn btn-primary text-white" @click="(e) => openSelectWallet(e)">
 					Select Wallet
 				</button>
 				<div v-else-if="!publicKeyBase58" @mouseover="openDropdown">
-					<wallet-connect-button :connecting="connecting" :wallet="wallet" @connect="doConnect"></wallet-connect-button>
-					<!--					<span class="swv-change-wallet-text" @click="(e) => openDropdown(e)">Change Wallet</span>-->
+					<wallet-connect-button :connecting="connecting" :wallet="adapter.wallet" @click="doConnect"></wallet-connect-button>
 				</div>
 				<div v-else class="swv-dropdown">
 					<slot name="dropdown-button">
@@ -18,7 +18,7 @@
 								:aria-expanded="dropdownOpened"
 								:title="publicKeyBase58"
 						>
-							<wallet-icon :wallet="wallet"></wallet-icon>
+							<wallet-icon :wallet="adapter.wallet"></wallet-icon>
 							<span v-text="publicKeyTrimmed"></span>
 						</button>
 					</slot>
@@ -38,7 +38,7 @@
 							<li @click="(e) => {openSelectWallet(e); closeDropdown(e);}" class="swv-dropdown-list-item" role="menuitem">
 								Change wallet
 							</li>
-							<li @click="(e) => {disconnect(e); closeDropdown(e);}" class="swv-dropdown-list-item" role="menuitem">
+							<li @click="(e) => {onDisconnect(e); closeDropdown(e);}" class="swv-dropdown-list-item" role="menuitem">
 								Disconnect
 							</li>
 						</slot>
@@ -83,40 +83,96 @@ export default {
 	},
 	data() {
 		return {
+			adapter: null,
 			canCopy: true,
 			addressCopied: false,
-			wallet: null,
-			disconnect: null,
-			connect: null,
 			dropdownPanel: null,
 			dropdownOpened: false,
 			selectWalletOpened: false,
+			isLegacy: false,
+		}
+	},
+	watch:{
+		"adapter.connected": function() {
+			console.log("Connection change", this.adapter.connected)
+
+			if (this.adapter.connected)
+				this.$emit("connect", this.adapter.wallet)
+			else if (this.adapter.wallet)
+				this.$emit("disconnect")
 		}
 	},
 	computed: {
 		publicKeyBase58: function () {
-			return this.wallet?.publicKey?.toBase58()
+			if(this.isLegacy)
+				return window.solflare?.publicKey?.toString()
+
+			return this.adapter?.publicKey?.toBase58()
 		},
 
 		publicKeyTrimmed: function () {
-			if (!this.wallet || !this.publicKeyBase58) return null;
+			if (!this.adapter.wallet || !this.publicKeyBase58) return null;
 			return this.publicKeyBase58.slice(0, 4) + ".." + this.publicKeyBase58.slice(-4);
 		}
 	},
 	methods: {
-		doConnect: function (e) {
-			console.log("Connecting", this.wallet)
-			if (!this.wallet) {
-				this.onWalletError(new Error("Wallet not found"))
-				return
-			}
 
-			console.log(`doConnect "${this.publicKeyBase58}"`, this.wallet)
-			this.connect()
-			this.updateWallet()
+		/**
+		 * @type function
+		 */
+		onSolflare: function(e) {
+			console.log("onSolflare", e)
+
+
+			window.solflare.connect().then(() => {
+				console.log("Solflare connected", window.solflare?.publicKey)
+
+				localStorage.setItem("walletName", "Solflare")
+				this.isLegacy = true
+				this.adapter.setSolflare(window.solflare)
+				this.$emit("connect", {adapter: window.solflare})
+			})
 		},
 
-		onWalletError: function (e) {
+		onSelect: function (e) {
+			console.log("onSelect", e)
+			if(e === "Solflare") {
+				return this.onSolflare(e)
+			}
+
+			this.adapter.select(e)
+
+			this.$nextTick(() =>{
+				console.log("Connecting to wallet")
+				this.doConnect()
+			})
+		},
+
+		onDisconnect: function(e) {
+			console.log("onDisconnect",e)
+			this.isLegacy = false
+			this.adapter.disconnect()
+			this.$emit("disconnect")
+		},
+
+		/**
+		 * @type function
+		 */
+		doConnect: async function () {		//
+			// 	const {publicKey, wallet, disconnect, connect} = useWallet();
+			console.log(`doConnect:Connect`)
+
+			this.adapter.connect().then(() => {
+				console.log("Adapter connected")
+				this.$emit("connect", this.adapter.wallet)
+			}).catch(e => {
+				console.error("Failed to connect to adapter", e)
+			})
+			console.log(`doConnect:Connect - Complete`)
+		},
+
+		onWalletError: function (e, a) {
+			console.error("onWalletError", e)
 			this.$emit("error", e)
 		},
 
@@ -133,14 +189,10 @@ export default {
 		/**
 		 * @type function
 		 */
-		closeSelectWallet: function (e) {
-			this.selectWalletOpened = false
-		},
-		/**
-		 * @type function
-		 */
 		openDropdown: function (e) {
-			console.log("Opening dropdown")
+			if (!this.adapter.wallet)
+				return
+
 			this.dropdownOpened = true
 		},
 		/**
@@ -151,30 +203,31 @@ export default {
 		},
 
 		updateWallet: function () {
-			this.$forceUpdate()
+			// this.$forceUpdate()
+		},
+		attemptConnect: function () {
+			try {
+				this.doConnect(null)
+				console.log("attemptConnect:doConnect Complete")
+			} catch (e) {
+				console.error("Unable to init wallet", e)
+			}
 		}
+	},
+	mounted() {
+		// this.attemptConnect()
+
+		// setTimeout(() => {
+		// 	this.attemptConnect()
+		// }, 600)
 	},
 	beforeMount() {
 		initWallet({
 			wallets: this.wallets,
 			autoConnect: this.autoConnect,
 			openOnboardingUrls: this.openOnboardingUrls,
-			onError: this.onWalletError
 		})
-
-		try {
-			const {publicKey, wallet, disconnect, connect, setWallet, readyState} = useWallet();
-			this.wallet = wallet
-			this.disconnect = disconnect
-			this.connect = connect
-
-			if (this.wallet) {
-				console.debug("selecting wallet:", this.wallet)
-				setWallet(this.wallet)
-			}
-		} catch (e) {
-			console.error("Unable to init wallet", e)
-		}
+		this.adapter = useWallet()
 	}
 }
 </script>
