@@ -92,19 +92,19 @@ export default {
 			isLegacy: false,
 		}
 	},
-	watch:{
-		"adapter.connected": function() {
+	watch: {
+		"adapter.connected": function () {
 			console.log("Connection change", this.adapter.connected)
 
 			if (this.adapter.connected)
 				this.$emit("connect", this.adapter.wallet)
-			else if (this.adapter.wallet)
+			else if (this.adapter.wallet && this.adapter.connected)
 				this.$emit("disconnect")
 		}
 	},
 	computed: {
 		publicKeyBase58: function () {
-			if(this.isLegacy)
+			if (this.isLegacy)
 				return window.solflare?.publicKey?.toString()
 
 			return this.adapter?.publicKey?.toBase58()
@@ -120,7 +120,7 @@ export default {
 		/**
 		 * @type function
 		 */
-		onSolflare: function(e) {
+		onSolflare: function (e) {
 			console.log("onSolflare", e)
 
 
@@ -134,22 +134,30 @@ export default {
 			})
 		},
 
+
+		/**
+		 * @type function
+		 */
 		onSelect: function (e) {
 			console.log("onSelect", e)
-			if(e === "Solflare") {
+			if (e === "Solflare") {
 				return this.onSolflare(e)
 			}
 
 			this.adapter.select(e)
 
-			this.$nextTick(() =>{
+			this.$nextTick(() => {
 				console.log("Connecting to wallet")
 				this.doConnect()
 			})
 		},
 
-		onDisconnect: function(e) {
-			console.log("onDisconnect",e)
+
+		/**
+		 * @type function
+		 */
+		onDisconnect: function (e) {
+			console.log("WMB: onDisconnect", e)
 			this.isLegacy = false
 			this.adapter.disconnect()
 			this.$emit("disconnect")
@@ -159,16 +167,15 @@ export default {
 		 * @type function
 		 */
 		doConnect: async function () {		//
-			// 	const {publicKey, wallet, disconnect, connect} = useWallet();
-			console.log(`doConnect:Connect`)
 
-			this.adapter.connect().then(() => {
-				console.log("Adapter connected")
-				this.$emit("connect", this.adapter.wallet)
-			}).catch(e => {
-				console.error("Failed to connect to adapter", e)
-			})
-			console.log(`doConnect:Connect - Complete`)
+			this.$emit("connect", this.adapter.wallet)
+
+			// this.adapter.connect().then(() => {
+			// 	console.log("Adapter connected")
+			// 	this.$emit("connect", this.adapter.wallet)
+			// }).catch(e => {
+			// 	console.error("Failed to connect to adapter", e)
+			// })
 		},
 
 		onWalletError: function (e, a) {

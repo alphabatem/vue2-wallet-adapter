@@ -109,11 +109,13 @@ export const createWalletStore = ({
 
 	// Disconnect the wallet adapter.
 	const disconnect = async (): Promise<void> => {
-		console.log("Disconnecting to adapter", wallet.value)
+		console.log("Disconnecting to adapter", wallet.value, disconnecting.value)
 		if (disconnecting.value || !wallet.value) return;
 		try {
 			disconnecting.value = true;
 			await wallet.value.adapter.disconnect();
+			wallet.value = null;
+
 		} finally {
 			disconnecting.value = false;
 		}

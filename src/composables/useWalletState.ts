@@ -27,9 +27,10 @@ export function useWalletState(
 	);
 
 	const refreshWalletState = () => {
-		console.log("refreshWalletState", {val: wallet.value, name})
-		if (name.value === "Solflare" || !name.value)
+		if (name.value === "Solflare" || !name.value) {
+			console.log("Skip refreshWalletState", {val: wallet.value, name})
 			return
+		}
 
 		publicKey.value = wallet.value?.adapter.publicKey ?? null;
 		connected.value = wallet.value?.adapter.connected ?? false;
@@ -40,6 +41,8 @@ export function useWalletState(
 	// Set the active wallet if the name changes or different wallets are provided.
 	watchEffect(() => {
 		if (name.value === "Solflare" || !name.value) {
+			console.log("Skip watchEffect", {val: name})
+
 			connected.value = true
 			readyState.value = WalletReadyState.Installed
 			return

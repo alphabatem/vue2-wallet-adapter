@@ -30,7 +30,8 @@ export function useSelectWalletName(
 	);
 
 	const select = (walletName: WalletName): void => {
-		console.log("Select", walletName)
+		console.log("Setting Storage", walletName)
+		localStorage.setItem(localStorageKey, walletName)
 		if (name.value !== walletName) {
 			name.value = walletName;
 		}
