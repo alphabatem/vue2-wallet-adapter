@@ -140,9 +140,9 @@ export default {
 		 */
 		onSelect: function (e) {
 			console.log("onSelect", e)
-			if (e === "Solflare") {
-				return this.onSolflare(e)
-			}
+			// if (e === "Solflare") {
+			// 	return this.onSolflare(e)
+			// }
 
 			this.adapter.select(e)
 
