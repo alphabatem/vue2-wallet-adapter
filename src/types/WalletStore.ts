@@ -27,8 +27,6 @@ export type WalletStore = {
   // Methods.
   select(walletName: WalletName): void;
 
-  setSolflare(solFlare: any): void;
-
   /**
    * @type function
    */
