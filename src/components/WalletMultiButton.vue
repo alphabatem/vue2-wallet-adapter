@@ -167,15 +167,12 @@ export default {
 		 * @type function
 		 */
 		doConnect: async function () {		//
-
-			this.$emit("connect", this.adapter.wallet)
-
-			// this.adapter.connect().then(() => {
-			// 	console.log("Adapter connected")
-			// 	this.$emit("connect", this.adapter.wallet)
-			// }).catch(e => {
-			// 	console.error("Failed to connect to adapter", e)
-			// })
+			this.adapter.connect().then(() => {
+				console.log("Adapter connected")
+				this.$emit("connect", this.adapter.wallet)
+			}).catch(e => {
+				console.error("Failed to connect to adapter", e)
+			})
 		},
 
 		onWalletError: function (e, a) {
@@ -208,25 +205,6 @@ export default {
 		closeDropdown: function (e) {
 			this.dropdownOpened = false
 		},
-
-		updateWallet: function () {
-			// this.$forceUpdate()
-		},
-		attemptConnect: function () {
-			try {
-				this.doConnect(null)
-				console.log("attemptConnect:doConnect Complete")
-			} catch (e) {
-				console.error("Unable to init wallet", e)
-			}
-		}
-	},
-	mounted() {
-		// this.attemptConnect()
-
-		// setTimeout(() => {
-		// 	this.attemptConnect()
-		// }, 600)
 	},
 	beforeMount() {
 		initWallet({

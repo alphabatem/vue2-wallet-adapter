@@ -36,14 +36,15 @@ export function useAutoConnect(
     }
 
     (async () => {
-      if (!wallet.value) return;
+      if (!wallet.value || connecting.value) return;
+
       connecting.value = true;
       hasAttemptedToAutoConnect.value = true;
       try {
         if (isUsingMwaAdapterOnMobile.value) {
           await (
             wallet.value.adapter as SolanaMobileWalletAdapter
-          ).autoConnect_DO_NOT_USE_OR_YOU_WILL_BE_FIRED();
+          ).autoConnect();
         } else {
           await wallet.value.adapter.connect();
         }
