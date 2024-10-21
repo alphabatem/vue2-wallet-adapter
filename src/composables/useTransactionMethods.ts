@@ -43,6 +43,7 @@ export function useTransactionMethods(
 	>(() => {
 		const adapter = wallet.value?.adapter;
 		if (!(adapter && "signTransaction" in adapter)) return;
+		console.log("signTransaction:Adapter", adapter)
 		return async (transaction) => {
 			if (!adapter.connected) throw handleError(new WalletNotConnectedError());
 			return await adapter.signTransaction(transaction);
@@ -55,6 +56,7 @@ export function useTransactionMethods(
 	>(() => {
 		const adapter = wallet.value?.adapter;
 		if (!(adapter && "signAllTransactions" in adapter)) return;
+		console.log("signAllTransactions:Adapter", adapter)
 		return async (transactions) => {
 			if (!adapter.connected) throw handleError(new WalletNotConnectedError());
 			return await adapter.signAllTransactions(transactions);
@@ -67,6 +69,7 @@ export function useTransactionMethods(
 	>(() => {
 		const adapter = wallet.value?.adapter;
 		if (!(adapter && "signMessage" in adapter)) return;
+		console.log("signMessage:Adapter", adapter)
 		return async (message: Uint8Array) => {
 			if (!adapter.connected) throw handleError(new WalletNotConnectedError());
 			return await adapter.signMessage(message);
