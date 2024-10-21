@@ -1,6 +1,6 @@
 {
 	"name": "@alphabatem/vue2-wallet-adapter",
-	"version": "0.1.762",
+	"version": "0.1.763",
 	"description": "Solana wallet integration for Vue 2",
 	"author": "AlphaBatem",
 	"license": "MIT",
@@ -25,7 +25,8 @@
 		"dev": "yarn",
 		"build": "vite build && vue-tsc --emitDeclarationOnly",
 		"demo": "vite build -c vite.demo.config.ts",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"lint": "eslint --ext .js,.vue,.ts src"
 	},
 	"dependencies": {
 		"@solana-mobile/wallet-adapter-mobile": "^2.0.1",
@@ -38,6 +39,9 @@
 		"portal-vue": "^2.1.7"
 	},
 	"devDependencies": {
+	  	"eslint-plugin-vue": "^9.29.1",
+	  	"@typescript-eslint/eslint-plugin": "^8.10.0",
+	  	"@typescript-eslint/parser": "^8.10.0",
 		"@solana/wallet-adapter-wallets": "^0.19.0",
 		"@solana/web3.js": "^1.66.0",
 		"@types/node-fetch": "^2.6.2",

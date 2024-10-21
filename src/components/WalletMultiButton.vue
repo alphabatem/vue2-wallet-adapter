@@ -3,7 +3,7 @@
 			:wallets="adapter.wallets" @select="onSelect">
 		<template>
 			<slot>
-				<button v-if="!adapter.wallet" class="swv-button swv-button-trigger btn btn-primary text-white" @click="(e) => openSelectWallet(e)">
+				<button v-if="!adapter.wallet || disconnected" class="swv-button swv-button-trigger btn btn-primary text-white" @click="(e) => openSelectWallet(e)">
 					Select Wallet
 				</button>
 				<div v-else-if="!publicKeyBase58" @mouseover="openDropdown">
@@ -83,13 +83,13 @@ export default {
 	},
 	data() {
 		return {
+			disconnected: false,
 			adapter: null,
 			canCopy: true,
 			addressCopied: false,
 			dropdownPanel: null,
 			dropdownOpened: false,
 			selectWalletOpened: false,
-			isLegacy: false,
 		}
 	},
 	watch: {
@@ -104,9 +104,6 @@ export default {
 	},
 	computed: {
 		publicKeyBase58: function () {
-			if (this.isLegacy)
-				return window.solflare?.publicKey?.toString()
-
 			return this.adapter?.publicKey?.toBase58()
 		},
 
@@ -116,33 +113,11 @@ export default {
 		}
 	},
 	methods: {
-
-		/**
-		 * @type function
-		 */
-		onSolflare: function (e) {
-			console.log("onSolflare", e)
-
-
-			window.solflare.connect().then(() => {
-				console.log("Solflare connected", window.solflare?.publicKey)
-
-				localStorage.setItem("walletName", "Solflare")
-				this.isLegacy = true
-				this.adapter.setSolflare(window.solflare)
-				this.$emit("connect", {adapter: window.solflare})
-			})
-		},
-
-
 		/**
 		 * @type function
 		 */
 		onSelect: function (e) {
 			console.log("onSelect", e)
-			// if (e === "Solflare") {
-			// 	return this.onSolflare(e)
-			// }
 
 			this.adapter.select(e)
 
@@ -158,17 +133,18 @@ export default {
 		 */
 		onDisconnect: function (e) {
 			console.log("WMB: onDisconnect", e)
-			this.isLegacy = false
 			this.adapter.disconnect()
 			this.$emit("disconnect")
+			this.disconnected = true
 		},
 
 		/**
 		 * @type function
 		 */
-		doConnect: async function () {		//
+		doConnect: async function () {
 			this.adapter.connect().then(() => {
-				console.log("Adapter connected")
+				this.disconnected = false
+				console.log("Adapter connected", this.adapter)
 				this.$emit("connect", this.adapter.wallet)
 			}).catch(e => {
 				console.error("Failed to connect to adapter", e)
@@ -176,7 +152,7 @@ export default {
 		},
 
 		onWalletError: function (e, a) {
-			console.error("onWalletError", e)
+			console.error("onWalletError", e, a)
 			this.$emit("error", e)
 		},
 
