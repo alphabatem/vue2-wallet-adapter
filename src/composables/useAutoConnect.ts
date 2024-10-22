@@ -46,7 +46,7 @@ export function useAutoConnect(
             wallet.value.adapter as SolanaMobileWalletAdapter
           ).autoConnect();
         } else {
-          await wallet.value.adapter.connect();
+          await wallet.value.adapter.autoConnect();
         }
       } catch (error: any) {
         deselect();
