@@ -188,6 +188,8 @@ export default {
 			autoConnect: this.autoConnect,
 			openOnboardingUrls: this.openOnboardingUrls,
 		})
+	},
+	mounted() {
 		this.adapter = useWallet()
 	}
 }
