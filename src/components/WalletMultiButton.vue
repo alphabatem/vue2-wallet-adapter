@@ -142,13 +142,14 @@ export default {
 		 * @type function
 		 */
 		doConnect: async function () {
-			this.adapter.connect().then(() => {
-				this.disconnected = false
-				console.log("Adapter connected", this.adapter)
-				this.$emit("connect", this.adapter.wallet)
-			}).catch(e => {
-				console.error("Failed to connect to adapter", e)
-			})
+			this.$emit("connect", this.adapter.wallet)
+			// this.adapter.connect().then(() => {
+			// 	this.disconnected = false
+			// 	console.log("Adapter connected", this.adapter)
+			// 	this.$emit("connect", this.adapter.wallet)
+			// }).catch(e => {
+			// 	console.error("Failed to connect to adapter", e)
+			// })
 		},
 
 		onWalletError: function (e, a) {
